@@ -4,7 +4,7 @@ from .models import UserKeys, Server, UserData
 
 class UserKeysAdmin(admin.ModelAdmin):
     fields = ['key_file', ]
-    list_display = ['user','key_file']
+    list_display = ['user','key_file', 'server_access']
 
     class Meta:
         model = UserKeys
@@ -25,6 +25,13 @@ class UserKeysAdmin(admin.ModelAdmin):
         if obj is not None and not request.user.is_superuser and request.user.id != obj.user.id:
             return False
         return True
+
+    def server_access(self, item):
+        user_data_obj = UserData.objects.filter(key_user=item).values_list('server__server_ipaddress', flat=True)
+        if user_data_obj:
+            return user_data_obj
+        else:
+            return None
 
 
 class UserDataAdmin(admin.ModelAdmin):
