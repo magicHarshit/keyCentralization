@@ -1,4 +1,5 @@
 import os
+import subprocess
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -36,13 +37,15 @@ class UserData(models.Model):
 def my_handler(sender, **kwargs):
     instance = kwargs['instance']
     key_user =  instance.key_user
-    system_user = instance.system_user.username
-    server = instance.server.server_ipaddress
     key_instance = UserKeys.objects.get(user=key_user)
     file_obj = key_instance.key_file.file
-    import pdb;pdb.set_trace()
-    command = "cat %s | ssh root@%s 'cat >> /home/%s/.ssh/authorized_keys'" %(file_obj, server, system_user)
-    os.system(command)
+    file_text = file_obj.read()
+    keys = subprocess.check_output(["ssh", "root@192.168.1.8", "cat", "/home/umesh/.ssh/authorized_keys"])
+    if file_text not in keys:
+        system_user = instance.system_user.username
+        server = instance.server.server_ipaddress
+        command = "cat %s | ssh root@%s 'cat >> /home/%s/.ssh/authorized_keys'" % (file_obj, server, system_user)
+        os.system(command)
 
 
 post_save.connect(my_handler, sender=UserData)
