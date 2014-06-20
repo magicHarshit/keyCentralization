@@ -4,9 +4,13 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
 
+def key_file_path(instance, filename):
+    return '/'.join(['media', 'key_file', instance.user.username, filename])
+
+
 class UserKeys(models.Model):
     user = models.ForeignKey(User)
-    key_file = models.FileField(upload_to="key_files")
+    key_file = models.FileField(upload_to=key_file_path)
 
     def __unicode__(self):
         return self.user.username
