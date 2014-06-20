@@ -40,6 +40,7 @@ def my_handler(sender, **kwargs):
     server = instance.server.server_ipaddress
     key_instance = UserKeys.objects.get(user=key_user)
     file_obj = key_instance.key_file.file
+    import pdb;pdb.set_trace()
     command = "cat %s | ssh root@%s 'cat >> /home/%s/.ssh/authorized_keys'" %(file_obj, server, system_user)
     os.system(command)
 
