@@ -4,7 +4,7 @@ from .models import UserKeys, Server, UserData
 
 class UserKeysAdmin(admin.ModelAdmin):
     fields = ['key_file', ]
-    list_display = ['user','key_file', 'server_access']
+    list_display = ['user','key_file', 'server_access', 'ssh_on_server']
 
     class Meta:
         model = UserKeys
@@ -27,11 +27,22 @@ class UserKeysAdmin(admin.ModelAdmin):
         return True
 
     def server_access(self, item):
-        user_data_obj = UserData.objects.filter(key_user=item).values_list('server__server_ipaddress', flat=True)
+        user_id = item.user.id
+        user_data_obj = UserData.objects.filter(key_user=user_id).values_list('server__server_ipaddress', flat=True)
         if user_data_obj:
             return user_data_obj
         else:
             return None
+
+    def ssh_on_server(self, item):
+        servers = self.server_access(item)
+        if servers:
+            server_ip = servers[0]
+            return '<a href="http://%s:6080/vnc_auto.html">OPEN SERVER</a>' %(server_ip)
+        return None
+        # return '<a href="%s">%s</a>' % (obj.firm_url, obj.firm_url)
+
+    ssh_on_server.allow_tags = True
 
 
 class UserDataAdmin(admin.ModelAdmin):
