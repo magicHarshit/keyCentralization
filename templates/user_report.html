@@ -1,0 +1,67 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+
+<table border="0" width="100%">
+<tr>
+    <td>
+        <button onclick="location.href='/admin/centralization/userkeys/add/'"> Add Public Key </button>
+    </td>
+    <td>
+        <b>PublicKey:-</b>
+        {% for each in uploaded_keys %}
+            {{ each.key_file }}
+        {% endfor %}
+
+    </td>
+    <td>
+        <b>PrivateKey:-</b>
+        {% for each in uploaded_keys %}
+            {{ each.key_file }}
+        {% endfor %}
+    </td>
+    <td>
+        <button> Genrate Your own key </button>
+    </td>
+</tr>
+</table>
+
+
+<table border="1" width="100%">
+    <tr>
+        <td>
+            <b>User</b>
+        </td>
+        <td>
+            <b>Server</b>
+        </td>
+        <td>
+            <b>System User Access</b>
+        </td>
+        <td>
+            <b>Open Console</b>
+        </td>
+        <td>
+            <b>Win Scp</b>
+        </td>
+    </tr>
+    {%  for user_data_obj in user_data_objs %}
+        <tr>
+            <td>
+                {{ user }}
+            </td>
+            <td>
+                {{ user_data_obj.server__server_ipaddress }}
+            </td>
+            <td>
+                {{ user_data_obj.system_user__username }}
+            </td>
+            <td>
+                <a href="http://{{ user_data_obj.server__server_ipaddress }}:6080/vnc_auto.html">SSH Console</a>
+            </td>
+            <td>
+                WinScp Console
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}
