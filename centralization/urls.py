@@ -3,7 +3,7 @@ from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
-from .views import login
+from .views import login, show_user_report
 
 urlpatterns = patterns('',
     # Examples:
@@ -15,7 +15,8 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     (r'^$', login),
-    # url(r'^admin/logout/', logout),
+    (r'^centralization/userkeys/$', show_user_report),
+
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^static', 'django.contrib.staticfiles.views.serve'),

@@ -51,7 +51,7 @@ def login(request, template_name='registration/login.html',
             if user.is_superuser:
                 redirect_to = '/admin/'
             else:
-                redirect_to = '/admin/centralization/userkeys/'
+                redirect_to = '/centralization/userkeys/'
             return HttpResponseRedirect(redirect_to)
     else:
         form = authentication_form(request)
@@ -71,3 +71,16 @@ def login(request, template_name='registration/login.html',
     return TemplateResponse(request, template_name, context,
                             current_app=current_app)
 
+
+from .models import UserData, UserKeys
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.http import Http404
+
+def show_user_report(request):
+    user = request.user
+    if not user.is_staff:
+        raise Http404
+    uploaded_keys = UserKeys.objects.filter(user=user).values('key_file')
+    user_data_objs = UserData.objects.filter(key_user=user).values('system_user__username','server__server_ipaddress',)
+    return render_to_response("user_report.html", locals(), RequestContext(request))
