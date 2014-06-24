@@ -109,6 +109,7 @@ ROOT_URLCONF = 'centralization.urls'
 WSGI_APPLICATION = 'centralization.wsgi.application'
 
 TEMPLATE_DIRS = (
+    '/home/harshit/workspace/centralization/templates'
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use ard slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -161,3 +162,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+# LOGIN_REDIRECT_URL = '/admin/logout/'
