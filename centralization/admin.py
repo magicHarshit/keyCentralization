@@ -4,7 +4,7 @@ from .models import UserKeys, Server, UserData
 
 class UserKeysAdmin(admin.ModelAdmin):
     fields = ['key_file', ]
-    list_display = ['user','key_file', 'server_access', 'ssh_on_server']
+    list_display = ['user','key_file', 'server_access','system_user_access', 'ssh_on_server','win_scp']
 
     class Meta:
         model = UserKeys
@@ -33,6 +33,15 @@ class UserKeysAdmin(admin.ModelAdmin):
             return user_data_obj
         else:
             return None
+
+    def system_user_access(self,item):
+        user_id = item.user.id
+        system_users = UserData.objects.filter(key_user=user_id).values_list('system_user__username', flat=True)
+        return system_users
+
+    def win_scp(self,item):
+        return "To be Implemented"
+
 
     def ssh_on_server(self, item):
         servers = self.server_access(item)
